@@ -92,7 +92,7 @@ reasoning_tool=Tool(
 assistant_agent=initialize_agent(
     tools=[wikipedia_tool, calculator_tool, reasoning_tool],
     llm=llm,
-    agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
+    agent=AgentType.CHAT_ZERO_SHOT_REACT_DESCRIPTION,
     verbose=False,
     handle_parsing_errors=True
 )
