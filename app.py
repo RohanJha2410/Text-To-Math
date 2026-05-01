@@ -43,7 +43,11 @@ math_prompt_template = PromptTemplate(
     template="""You are a strict math expression generator. 
 Given a math problem, you must output a single mathematical expression that solves the problem.
 The expression must be valid for Python's numexpr library.
-
+IMPORTANT: You must wrap your mathematical expression in a ```text``` code block.
+For example:
+```text
+5 + 7 * 2
+```
 
 Question: {question}
 """
@@ -112,7 +116,10 @@ if st.button("Find my answer"):
             st.chat_message("user").write(question)
 
             st_cb=StreamlitCallbackHandler(st.container(),expand_new_thoughts=False)
-            response=assistant_agent.run(st.session_state.messages,callbacks=[st_cb])
+            # Combine history into a string or just pass the latest question
+            # Since the agent lacks conversational memory, passing the whole message history as a string helps maintain context.
+            chat_history = "\n".join([f"{msg['role']}: {msg['content']}" for msg in st.session_state.messages])
+            response=assistant_agent.run(chat_history,callbacks=[st_cb])
             st.session_state.messages.append({'role':'assistant',"content":response})
             st.write('### Response:')
             st.success(response)
